@@ -1,0 +1,10 @@
+HOST = "localhost"
+
+SERVERS = [
+    (HOST, 5001),
+    (HOST, 5002),
+]
+
+BUFFER_SIZE = 8192
+
+TEST_SIZES = [10, 20, 50, 100, 500, 1000, 2000, 5000]

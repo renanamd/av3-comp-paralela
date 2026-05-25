@@ -3,7 +3,11 @@ HOST = "localhost"
 SERVERS = [
     (HOST, 5001),
     (HOST, 5002),
+    (HOST, 5003),
+    (HOST, 5004),
 ]
+
+SERVER_CONFIGS = [2, 4]
 
 BUFFER_SIZE = 8192
 

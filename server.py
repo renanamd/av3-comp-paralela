@@ -1,3 +1,10 @@
+import os
+# Força 1 thread por processo — garante que cada servidor usa 1 núcleo,
+# tornando a comparação com o serial justa (1 servidor = 1 thread).
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+os.environ['OMP_NUM_THREADS']      = '1'
+os.environ['MKL_NUM_THREADS']      = '1'
+
 import socket
 import pickle
 import struct
@@ -11,14 +18,16 @@ def receive_message(conn):
     raw_size = conn.recv(8)
     size = struct.unpack(">Q", raw_size)[0]
 
-    data = b""
-    while len(data) < size:
-        chunk = conn.recv(min(BUFFER_SIZE, size - len(data)))
+    chunks = []
+    received = 0
+    while received < size:
+        chunk = conn.recv(min(BUFFER_SIZE, size - received))
         if not chunk:
             break
-        data += chunk
+        chunks.append(chunk)
+        received += len(chunk)
 
-    return pickle.loads(data)
+    return pickle.loads(b"".join(chunks))
 
 
 def send_message(conn, data):
